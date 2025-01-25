@@ -43,3 +43,11 @@ function operate (num1, operator, num2) {
     }
 }
 
+const display = document.getElementById("screen");
+const buttons = document.querySelectorAll("button");
+
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        display.textContent = parseFloat(button.id)
+    });
+})
