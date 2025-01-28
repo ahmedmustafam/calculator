@@ -2,7 +2,7 @@
 
 let num1;
 let operator;
-let num2;
+let num2 = null;
 let result;
 
 function add(a, b) {
@@ -64,9 +64,10 @@ const currentOperand = document.querySelector(".current-operand");
 clear.addEventListener("click", () => {
   currentOperand.textContent = "";
   previousOperand.textContent = "";
-  num1 = 0;
-  num2 = 0;
-  result = 0;
+  num1 = undefined;
+  num2 = null;
+  result = undefined;
+  operator = null;
 });
 
 buttons.forEach((button) => {
@@ -78,9 +79,15 @@ buttons.forEach((button) => {
     });
   } else if (button.classList.contains("operators")) {
     button.addEventListener("click", () => {
-      num1 = parseFloat(currentOperand.textContent); // updating value of num1 by using screen content
+      if (num1 === undefined) { // Checking if num1 exists
+        num1 = parseFloat(currentOperand.textContent); // updating value of num1 by using screen content
+      } else if (operator != null) { // Checking if operator exists
+        num2 = parseFloat(currentOperand.textContent); // Set num2 upon second click
+        operate(num1, operator, num2);
+        num1 = result; // Update num1 with result to chain calculation
+      }
       operator = button.id;
-      previousOperand.textContent = `${currentOperand.textContent} ${operator}`;
+      previousOperand.textContent = `${num1} ${operator}`;
       currentOperand.textContent = ""; // clearing current operand for second operand
     });
   }
@@ -89,7 +96,7 @@ buttons.forEach((button) => {
 equals.addEventListener("click", () => {
   num2 = parseFloat(currentOperand.textContent); // updating num2 for final operation
   operate(num1, operator, num2);
-  if (result == NaN || result == undefined || result == Infinity) {
+  if (isNaN(result) || result === undefined || result == Infinity) {
     // to account for errors
     currentOperand.textContent = "Error";
   } else {
